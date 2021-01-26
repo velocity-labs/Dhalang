@@ -55,7 +55,9 @@ module Dhalang
     end
 
     def self.visit_page_with_puppeteer(page_to_visit, path_to_save_pdf_to)
-      system("node #{PDF_GENERATOR_JS_PATH} #{page_to_visit} #{Shellwords.escape(path_to_save_pdf_to)} #{Shellwords.escape(PROJECT_PATH)}")
+      syscall = "node #{PDF_GENERATOR_JS_PATH} #{page_to_visit} #{Shellwords.escape(path_to_save_pdf_to)} #{Shellwords.escape(PROJECT_PATH)}"
+      Rails.logger.info(syscall)
+      system(syscall)
     end
 
     def self.get_file_content_as_binary_string(file)
