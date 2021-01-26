@@ -35,6 +35,21 @@ module Dhalang
       return binary_pdf_content
     end
 
+    def self.get_from_html_non_file_url(html)
+      html_file = create_temporary_html_file(html)
+      temporary_pdf_save_file = create_temporary_pdf_file
+      begin
+        visit_page_with_puppeteer(html_file.path, temporary_pdf_save_file.path)
+        binary_pdf_content = get_file_content_as_binary_string(temporary_pdf_save_file)
+      ensure
+        temporary_pdf_save_file.close unless temporary_pdf_save_file.closed?
+        html_file.close unless html_file.closed?
+        temporary_pdf_save_file.unlink
+        html_file.unlink
+      end
+      return binary_pdf_content
+    end
+
     private
     def self.validate_url(url)
       if (url !~ URI::DEFAULT_PARSER.regexp[:ABS_URI])
